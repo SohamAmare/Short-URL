@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkTrim - URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="ml-3 text-3xl font-bold text-gray-800">
+                <p><a href="http://localhost:5000">LinkTrim</a></p>
+            </div>
+            <div class="flex space-x-4">
+                <!-- New Button to Display Clicks -->
+                <button id="show-clicks-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-white hover:text-green-500 hover:border-green-500 border-transparent hover:border border">
+                    Show Clicks
+                </button>
+                <!-- Log In Button -->
+                <!-- <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-white hover:text-blue-500 hover:border-blue-500 hover:border transition">Log In</button> -->
+                <!-- Sign Up Button -->
+                <!-- <button class="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition">Sign Up</button> -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <section class="container mx-auto mt-16 mb-16">
+        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
+            <form method="POST" action="/url" class="space-y-4">
+                <label for="url" class="block text-lg font-medium text-gray-700">Enter your Original URL</label>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="url" name="url" placeholder="https://example.com" class="flex-1 border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">Generate</button>
+                </div>
+            </form>
+
+            <!-- Output Section -->
+            <div class="mt-6">
+                <% if (locals.id) { %>
+                    <div class="text-center text-blue-600">
+                        <p>URL Generated: <a href="http://localhost:5000/url/<%= id %>" class="underline">http://localhost:5000/url/<%= id %></a></p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Clicks Table (Initially Hidden) -->
+            <div id="clicks-table" class="mt-8 hidden overflow-x-auto">
+                <% if (locals.urls) { %>
+                    <table class="min-w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border px-4 py-2">S. No</th>
+                                <th class="border px-4 py-2">ShortID</th>
+                                <th class="border px-4 py-2">Redirect</th>
+                                <th class="border px-4 py-2">Clicks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% urls.forEach((url, index)=> { %>
+                                <tr>
+                                    <td class="border px-4 py-2"><%= index+1 %></td>
+                                    <td class="border px-4 py-2"><%= url.shortId %></td>
+                                    <td class="border px-4 py-2"><%= url.redirectURL %></td>
+                                    <td class="border px-4 py-2"><%= url.visitHistory.length %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('show-clicks-btn').addEventListener('click', function() {
+            var clicksTable = document.getElementById('clicks-table');
+            if (clicksTable.classList.contains('hidden')) {
+                clicksTable.classList.remove('hidden');
+            } else {
+                clicksTable.classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkTrim - URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-3xl font-bold text-gray-800">
+                <p>LinkTrim</p>
+            </div>
+            <div>
+                <ul class="flex space-x-6">
+                    <li>
+                        <button class="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white ">Sign Up</button>
+                    </li>
+                    <li>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-white hover:text-blue-500 hover:border-blue-500 hover:border ">Log In</button>
+                    </li>
+                    <li>
+                        <button class="border border-blue-500 text-blue-500 px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white ">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container mx-auto mt-16">
+        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
+            <form method="POST" action="/url" class="space-y-4">
+                <label for="url" class="block text-lg font-medium text-gray-700">Enter your Original URL</label>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="url" name="url" placeholder="https://example.com" class="flex-1 border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">Generate</button>
+                </div>
+            </form>
+
+            <div class="mt-6">
+                <% if (locals.id) { %>
+                    <div class="text-center text-blue-600">
+                        <p>URL Generated: <a href="http://localhost:5000/url/<%= id %>" class="underline">http://localhost:5000/url/<%= id %></a></p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html> -->
+
+<!-- <!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #fff;
+            /* background-image: linear-gradient(rgba(10, 8, 11, 0.8),
+                    rgba(81, 119, 216, 0.8)); */
+            border-style: double;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-attachment: fixed;
+        }
+
+
+        .left {
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            height: 50px;
+            margin-bottom: 10px;
+            /* background-color: aquamarine; */
+        }
+
+        .left p {
+            font-size: 40px;
+            color: rgb(105, 61, 3);
+        }
+
+        .left input {
+            width: 250px;
+            margin: 0 0 0 120px;
+            padding-left: 20px;
+            border-radius: 10px;
+        }
+
+        .left img {
+            padding: 0 330px 0 0;
+        }
+
+        .right {
+            width: 50%;
+            height: 50px;
+            margin: 5px 0 0 0;
+            padding: 10px;
+            /* background-color: green; */
+        }
+
+        .right ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+        }
+
+        .right ul a {
+            padding: 25px;
+        }
+
+        .right ul li a {
+            text-decoration: none;
+        }
+
+        .one {
+            height: 30px;
+            background-color: blueviolet;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            margin: 0px 10px;
+        }
+
+        /* .one-text {
+            color: #fff;
+        } */
+        .one:hover {
+            color: blueviolet;
+            background-color: white;
+            border-color: blueviolet;
+            font-size: 1rem;
+        }
+
+        .two {
+            height: 30px;
+            background-color: white;
+            text-align: center;
+            color: blueviolet;
+            border-color: blueviolet;
+            border-radius: 10px;
+            margin: 0px 10px;
+        }
+        
+        .two:hover {
+            background-color: blueviolet;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .center {
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: #000;
+        }
+
+        .form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #edeef0;
+            border-radius: 30px;
+            padding-left: 15px;
+        }
+
+        #url {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px;
+        }
+
+        .btn {
+            padding: 17px 50px;
+            border: none;
+            outline: none;
+            border-radius: 30px;
+            background-color: orange;
+            /* background: linear-gradient(#06060f, #000000); */
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: orangered;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Home Page</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="left">
+            <p>LinkTrim</p>
+        </div>
+        <div class="right">
+            <ul>
+                <li><button class="one">Log In</button></li>
+                <li><button class="two">Sign Up</button></li>
+            </ul>
+        </div>
+    </div>
+    <div class="center">
+        <form method="POST" action="/url">
+            <div class="label">
+                <label for="url">Enter your Original URL</label>
+            </div>
+            <div class="form">
+                <input type="text" id="url" name="url" placeholder="https://example.com">
+                <button type="submit" class="btn">Generate</button>
+            </div>
+        </form>
+        <div class="generate">
+            <% if (locals.id) { %>
+                <div class="flex text-center items-center text-blue-300"><p>URL Generated: http://localhost:5000/url/<%= id %></p></div>
+                <% } %>
+        </div>
+        <div class="table">
+                    <% if (locals.urls) { %>
+                        <table>
+                            <thead>
+                                <th>S. No</th>
+                                <th>ShortID</th>
+                                <th>Redirect</th>
+                                <th>Clicks</th>
+                            </thead>
+                            <tbody>
+                                <% urls.forEach((url, index)=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= index+1 %>
+                                        </td>
+                                        <td>
+                                            <%= url.shortId %>
+                                        </td>
+                                        <td>
+                                            <%= url.redirectURL %>
+                                        </td>
+                                        <td>
+                                            <%= url.visitHistory.length %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <% } %>
+                </div> 
+    </div>
+</body>
+
+</html> -->
